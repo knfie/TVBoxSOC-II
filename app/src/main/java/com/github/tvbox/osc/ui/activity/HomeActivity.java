@@ -217,7 +217,7 @@ public class HomeActivity extends BaseActivity {
             if (home.getName() == "TVBox") {
                 tvName.setText(home.getName());
             } else {
-                tvName.setText("TVBox" >> + home.getName());
+                tvName.setText("TVBox >>" + home.getName());
             }
         }
         if (dataInitOk && jarInitOk) {
