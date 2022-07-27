@@ -443,8 +443,8 @@ public class PlayActivity extends BaseActivity {
         if (mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null) {
             hasPre = false;
         } else {
-//修正倒序排序时上一集与下一集播放顺序相反的问题
-//            hasPre = mVodInfo.playIndex - 1 >= 0;
+             //修正倒序排序时上一集与下一集播放顺序相反的问题
+            //hasPre = mVodInfo.playIndex - 1 >= 0;
             if (mVodInfo.reverseSort){
                 hasPre = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
             } else {
@@ -455,8 +455,8 @@ public class PlayActivity extends BaseActivity {
             Toast.makeText(this, "已经是第一集了!", Toast.LENGTH_SHORT).show();
             return;
         }
-//修正倒序排序时上一集与下一集播放顺序相反的问题
-//        mVodInfo.playIndex--;
+         //修正倒序排序时上一集与下一集播放顺序相反的问题
+        //mVodInfo.playIndex--;
         if (mVodInfo.reverseSort){
             mVodInfo.playIndex++;
         } else {
@@ -487,6 +487,10 @@ public class PlayActivity extends BaseActivity {
 
         playUrl(null, null);
         String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex;
+        //存储播放进度
+        Object bodyKey=CacheManager.getCache(MD5.string2MD5(progressKey));
+        //重新播放清除现有进度
+        if (reset) CacheManager.delete(MD5.string2MD5(progressKey), 0);
         if (Thunder.play(vs.url, new Thunder.ThunderCallback() {
             @Override
             public void status(int code, String info) {
@@ -509,7 +513,9 @@ public class PlayActivity extends BaseActivity {
             mController.showParse(false);
             return;
         }
-        sourceViewModel.getPlay(sourceKey, mVodInfo.playFlag, progressKey, vs.url);
+        sourceViewModel.getPlay(sourceKey, mVodInfo.playFlag, progressKey, vs.url); 
+        //执行重新播放后还原之前的进度
+        if (reset) CacheManager.save(MD5.string2MD5(progressKey),bodyKey);
     }
 
     private String playSubtitle;
